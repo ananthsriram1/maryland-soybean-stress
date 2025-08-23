@@ -1,0 +1,38 @@
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# #### Visual Studio Code Template ####
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# #### Project-Specific Additions ####
+
+# Ignore the data folder to keep large CSVs out of the repository.
+# This is the most important rule for your project!
+/data/
+
+# Ignore any local environment variable files
+.env
