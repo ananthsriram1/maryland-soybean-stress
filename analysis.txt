@@ -11,3 +11,7 @@ outputs/NDVI/PeakGrowingSeasonNDVIvsFinalYield2021vs2024.png
     Shows how the slope is getting steeper, and disparity is increasing in production by region
 outputs/Precipitation/GrowingSeasonAvgPrecip.png
     Shows precipitation in growing season over time
+
+
+
+
