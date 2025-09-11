@@ -12,6 +12,6 @@ outputs/NDVI/PeakGrowingSeasonNDVIvsFinalYield2021vs2024.png
 outputs/Precipitation/GrowingSeasonAvgPrecip.png
     Shows precipitation in growing season over time
 
+outputs/BusinessPatterns/BizEstablishmentDistributionByCounty.png
 
-
-
+outputs/BusinessPatterns/DevVsAgr2020v2023.png
