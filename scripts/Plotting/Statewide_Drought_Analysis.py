@@ -124,3 +124,153 @@ print(granger_test_results)
 print("\n## Granger Causality Test: Does Precipitation predict PMDI? ##")
 granger_test_results = grangercausalitytests(statewide_avg[['PMDI', 'Precip']], maxlag=3, verbose=True)
 print(granger_test_results)
+
+# --- Agricultural District-level Analysis of Precipitation and PDSI ---
+print("\n## Creating Agricultural District-level Analysis of Precipitation and PDSI ##")
+
+# Define the agricultural district mapping
+district_counties = {
+    'WESTERN': {'Allegany', 'Garrett'},
+    'UPPER EASTERN SHORE': {'Caroline', 'Cecil', 'Kent', "Queen Anne's", 'Talbot'},
+    'SOUTHERN': {'Anne Arundel', 'Calvert', 'Charles', "Prince George's", "St. Mary's"},
+    'NORTH CENTRAL': {'Baltimore', 'Baltimore City', 'Carroll', 'Frederick', 'Harford', 'Howard', 'Montgomery', 'Washington'},
+    'LOWER EASTERN SHORE': {'Dorchester', 'Somerset', 'Wicomico', 'Worcester'}
+}
+
+# Add year and month columns for better analysis
+merged_df['date'] = pd.to_datetime(merged_df['date'])
+merged_df['Year'] = merged_df['date'].dt.year
+merged_df['Month'] = merged_df['date'].dt.month
+
+# Create a mapping from county to district
+county_to_district = {}
+for district, counties in district_counties.items():
+    for county in counties:
+        county_to_district[county] = district
+
+# Add district information to the dataframe
+merged_df['District'] = merged_df['County'].map(county_to_district)
+
+# Remove rows where district mapping failed
+merged_df = merged_df.dropna(subset=['District'])
+
+# Filter for growing season months (April-October)
+growing_season_df = merged_df[merged_df['Month'].between(4, 10)]
+
+# Calculate yearly averages by district
+district_yearly = growing_season_df.groupby(['District', 'Year'])[['Precip', 'PDSI']].mean().reset_index()
+
+# Get unique districts and years
+districts = sorted(district_yearly['District'].unique())
+years = sorted(district_yearly['Year'].unique())
+
+print(f"Analyzing {len(districts)} agricultural districts from {min(years)} to {max(years)}")
+print(f"Districts: {districts}")
+
+# Calculate global axis limits for consistency
+precip_min = district_yearly['Precip'].min() - 0.5
+precip_max = district_yearly['Precip'].max() + 0.5
+pdsi_min = district_yearly['PDSI'].min() - 0.5
+pdsi_max = district_yearly['PDSI'].max() + 0.5
+
+print(f"Fixed axis ranges - Precipitation: {precip_min:.1f} to {precip_max:.1f}, PDSI: {pdsi_min:.1f} to {pdsi_max:.1f}")
+
+# Create subplots for each district
+n_districts = len(districts)
+n_cols = 3
+n_rows = (n_districts + n_cols - 1) // n_cols
+
+fig, axes = plt.subplots(n_rows, n_cols, figsize=(18, 6*n_rows))
+axes = axes.flatten() if n_districts > 1 else [axes]
+
+for i, district in enumerate(districts):
+    ax = axes[i]
+    
+    # Get data for this district
+    district_data = district_yearly[district_yearly['District'] == district]
+    
+    # Plot precipitation
+    ax.plot(district_data['Year'], district_data['Precip'], 
+            marker='o', linewidth=3, markersize=8, 
+            color='blue', label='Precipitation', alpha=0.8)
+    
+    # Create second y-axis for PDSI
+    ax2 = ax.twinx()
+    ax2.plot(district_data['Year'], district_data['PDSI'], 
+             marker='s', linewidth=3, markersize=8, 
+             color='red', label='PDSI', alpha=0.8, linestyle='--')
+    
+    # Set fixed axis limits
+    ax.set_ylim(precip_min, precip_max)
+    ax2.set_ylim(pdsi_min, pdsi_max)
+    
+    # Customize the plot
+    ax.set_title(f'{district}', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Year', fontsize=12)
+    ax.set_ylabel('Precipitation (inches)', fontsize=12, color='blue')
+    ax2.set_ylabel('PDSI', fontsize=12, color='red')
+    
+    # Color the y-axis labels
+    ax.tick_params(axis='y', labelcolor='blue')
+    ax2.tick_params(axis='y', labelcolor='red')
+    
+    ax.grid(True, alpha=0.3)
+    
+    # Add horizontal reference lines
+    ax.axhline(y=0, color='black', linestyle='-', alpha=0.3, linewidth=0.5)
+    ax2.axhline(y=0, color='black', linestyle='-', alpha=0.3, linewidth=0.5)
+    
+    # Add legend only to first subplot
+    if i == 0:
+        lines1, labels1 = ax.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left', fontsize=10)
+
+# Remove empty subplots
+for i in range(n_districts, len(axes)):
+    fig.delaxes(axes[i])
+
+plt.suptitle('Agricultural District Precipitation and PDSI Analysis (Growing Season Averages)', 
+             fontsize=16, fontweight='bold', y=0.98)
+plt.tight_layout()
+plt.show()
+
+# Save the plot
+plt.savefig('outputs/DroughtIndices/District_Precip_PDSI_Analysis_Fixed_Axes.png', dpi=300, bbox_inches='tight')
+print("💾 Saved: outputs/DroughtIndices/District_Precip_PDSI_Analysis_Fixed_Axes.png")
+
+# Create a summary table of district statistics
+print("\n## Agricultural District Summary Statistics ##")
+district_stats = district_yearly.groupby('District')[['Precip', 'PDSI']].agg(['mean', 'std', 'min', 'max']).round(2)
+print(district_stats)
+
+# Create a heatmap of district-year data for better visualization
+print("\n## Creating District-Year Heatmaps ##")
+
+# Pivot data for heatmap
+precip_heatmap = district_yearly.pivot(index='District', columns='Year', values='Precip')
+pdsi_heatmap = district_yearly.pivot(index='District', columns='Year', values='PDSI')
+
+# Create heatmaps
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+
+# Precipitation heatmap
+sns.heatmap(precip_heatmap, annot=True, cmap='Blues', fmt='.1f', ax=ax1, cbar_kws={'label': 'Precipitation (inches)'})
+ax1.set_title('Precipitation by Agricultural District and Year\n(Growing Season Averages)', fontsize=14, fontweight='bold')
+ax1.set_xlabel('Year', fontsize=12)
+ax1.set_ylabel('Agricultural District', fontsize=12)
+
+# PDSI heatmap
+sns.heatmap(pdsi_heatmap, annot=True, cmap='RdBu_r', center=0, fmt='.2f', ax=ax2, cbar_kws={'label': 'PDSI'})
+ax2.set_title('PDSI by Agricultural District and Year\n(Growing Season Averages)', fontsize=14, fontweight='bold')
+ax2.set_xlabel('Year', fontsize=12)
+ax2.set_ylabel('Agricultural District', fontsize=12)
+
+plt.tight_layout()
+plt.show()
+
+# Save the heatmaps
+plt.savefig('outputs/DroughtIndices/District_Heatmaps_Precip_PDSI.png', dpi=300, bbox_inches='tight')
+print("💾 Saved: outputs/DroughtIndices/District_Heatmaps_Precip_PDSI.png")
+
+
