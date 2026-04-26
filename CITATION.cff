@@ -5,12 +5,12 @@ type: software
 authors:
   - family-names: "Sriram"
     given-names: "Ananth"
-  - family-names: "Borzì"
-    given-names: "Iolanda"
   - family-names: "Kumar"
     given-names: "Hemendra"
+  - family-names: "Borzì"
+    given-names: "Iolanda"
 license: "MIT"
-repository-code: "https://github.com/<REPLACE_WITH_GITHUB_OWNER>/<REPLACE_WITH_REPO_NAME>"
+repository-code: "https://github.com/ananthsriram1/maryland-soybean-stress"
 doi: "10.5281/zenodo.xxxxxxx"
 keywords:
   - soybean

@@ -16,13 +16,13 @@ script.
 If you use this code, please cite both the manuscript and the archived
 software release:
 
-**Manuscript:** Sriram, A., Borzì, I., & Kumar, H. (in review).
+**Manuscript:** Sriram, A., Kumar, H., & Borzì, I. (in review).
 *Quantifying Agricultural Resilience: A Geospatial Analysis of Drought,
 Soil, and the Mitigating Effect of Irrigation on Soybean Yield Disparity
 in Maryland.* International Journal of Applied Earth Observation and
 Geoinformation.
 
-**Software:** Sriram, A., Borzì, I., & Kumar, H. (2026). *Maryland
+**Software:** Sriram, A., Kumar, H., & Borzì, I. (2026). *Maryland
 Soybean Stress* (Version 1.0.0) [Software]. Zenodo.
 https://doi.org/10.5281/zenodo.NNNNNNN
 
