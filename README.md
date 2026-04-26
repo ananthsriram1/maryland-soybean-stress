@@ -23,8 +23,8 @@ in Maryland.* International Journal of Applied Earth Observation and
 Geoinformation.
 
 **Software:** Sriram, A., Kumar, H., & Borzì, I. (2026). *Maryland
-Soybean Stress* (Version 1.0.0) [Software]. Zenodo.
-https://doi.org/10.5281/zenodo.NNNNNNN
+Soybean Stress* (Version 1.0.1) [Software]. Zenodo.
+https://doi.org/10.5281/zenodo.19799371
 
 ## Quickstart (reproduce manuscript Figures 1–10)
 
