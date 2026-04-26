@@ -1,21 +1,30 @@
 # Maryland soybean stress — analysis code & figure reproduction
 
-<!--
-  Phase 4 — Round 1 DRAFT (README.md)
-  Review this file before asking the assistant to commit it.
--->
+Analysis pipeline and figure generators for a study of drought-related
+stress and irrigation effects on soybean yield disparity across Maryland's
+five USDA NASS reporting districts (1997–2024).
 
-This repository contains the **Python analysis pipeline and figure generators** for a study of **drought-related stress in Maryland soybean**, combining USDA yield and irrigation records, NOAA/NCEI climate and Palmer drought indices, county-level precipitation, soil composition (CDL band-5 soybean mask), and **Sentinel-2 / Landsat-based 10-day NDVI and NDWI** composites derived in Google Earth Engine.
-
-**Publication context (JAG resubmission).** The manuscript was **desk-rejected**; the resubmission requires a working **Code Availability** statement with a **Zenodo DOI** before the manuscript returns to the editor. Treat this repo as **deposit-ready** when Phase 4 closes: (1) finalize and tag the GitHub release, (2) obtain the Zenodo DOI, (3) paste that DOI into the manuscript’s Code Availability section and into `README.md` / `CITATION.cff` where placeholders appear below.
+The analysis combines USDA NASS yield and irrigation records, NOAA/NCEI
+climate and Palmer drought indices, USDA Cropland Data Layer soil
+composition, and Sentinel-2 / Landsat-derived 10-day NDVI and NDWI
+composites computed in Google Earth Engine. The repository regenerates
+all 10 manuscript figures from raw inputs through a single orchestrator
+script.
 
 ## Citation (placeholders — update after acceptance & Zenodo)
 
-- **Journal article (International Journal of Applied Earth Observation and Geoinformation — placeholder):**  
-  Sriram, A., Borzi, I., & Kumar, H. (*year*). *Title as accepted.* *International Journal of Applied Earth Observation and Geoinformation*. `https://doi.org/10.xxxx/xxxx` *(replace with the real DOI when assigned).*
+If you use this code, please cite both the manuscript and the archived
+software release:
 
-- **This code repository (Zenodo — placeholder):**  
-  Sriram, A., Borzi, I., & Kumar, H. (*year*). *Same title as manuscript.* Zenodo. `https://doi.org/10.5281/zenodo.xxxxxxx` *(replace with the Zenodo DOI after you publish the GitHub release archive).*
+**Manuscript:** Sriram, A., Borzì, I., & Kumar, H. (in review).
+*Quantifying Agricultural Resilience: A Geospatial Analysis of Drought,
+Soil, and the Mitigating Effect of Irrigation on Soybean Yield Disparity
+in Maryland.* International Journal of Applied Earth Observation and
+Geoinformation.
+
+**Software:** Sriram, A., Borzì, I., & Kumar, H. (2026). *Maryland
+Soybean Stress* (Version 1.0.0) [Software]. Zenodo.
+https://doi.org/10.5281/zenodo.NNNNNNN
 
 ## Quickstart (reproduce manuscript Figures 1–10)
 
