@@ -1,4 +1,4 @@
-# Maryland soybean stress — analysis code & figure reproduction
+# Maryland Soybean Stress
 
 Analysis pipeline and figure generators for a study of drought-related
 stress and irrigation effects on soybean yield disparity across Maryland's
@@ -11,7 +11,7 @@ composites computed in Google Earth Engine. The repository regenerates
 all 10 manuscript figures from raw inputs through a single orchestrator
 script.
 
-## Citation (placeholders — update after acceptance & Zenodo)
+## Citation
 
 If you use this code, please cite both the manuscript and the archived
 software release:
@@ -28,24 +28,34 @@ https://doi.org/10.5281/zenodo.NNNNNNN
 
 ## Quickstart (reproduce manuscript Figures 1–10)
 
-**Prerequisites:** Python 3.10+ recommended, `git`, and enough disk space for inputs (NASS / NCEI / GEE exports — see **Data sources**). The `data/` tree is **not** included in git; you must populate it locally.
+**Prerequisites:** Python 3.10+, `git`, and enough disk space for inputs
+(NASS / NCEI / GEE exports — see **Data sources**). The `data/` tree is
+**not** included in git; you must populate it locally per
+[`data/README.md`](data/README.md).
 
 ```bash
-git clone <YOUR_GITHUB_REPO_URL> maryland-soybean-stress
+git clone https://github.com/ananthsriram1/maryland-soybean-stress.git
 cd maryland-soybean-stress
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt    # pins supplied in Round 2 of Phase 4
+pip install -r requirements.txt
 
-# After populating `data/` per `data/README.md`, regenerate figures:
+# After populating data/ per data/README.md, regenerate figures:
 python -m analysis.figures.regenerate_manuscript_figures
 ```
 
-**Outputs:** Generators write descriptive PNG paths under `outputs/` (ignored by git except the paper-facing bundle). The orchestrator copies the canonical figures to `outputs/manuscript_figures/Figure01.png` … `Figure10.png`. **Figure 2** is currently a **documented placeholder** (soil heatmap variant selection pending); stderr warns when the stand-in is copied.
+**Outputs.** Each figure script writes to a descriptive path under
+`outputs/`. The orchestrator then copies the canonical version to
+`outputs/manuscript_figures/Figure01.png` … `Figure10.png`. Run
+`python -m analysis.figures.regenerate_manuscript_figures --help` for
+flags (`--figure`, `--no-copy`, `--verify-only`).
 
-**Baseline / drift tracking:** `docs/manuscript_figures_baseline.json` records SHA256 hashes for the originally submitted manuscript figures (see “Manuscript baselines rename” note below) and for the last successful regeneration. Optional review tiles under `outputs/manuscript_figures/_comparison/` are **gitignored** (local visual QA only).
+**Baseline tracking.** `docs/manuscript_figures_baseline.json` records
+SHA256 hashes for the originally submitted manuscript figures (under
+`outputs/manuscript_baselines/`) and for the last successful local
+regeneration.
 
-## Repository structure (high level)
+## Repository structure
 
 ```text
 maryland-soybean-stress/
@@ -62,50 +72,31 @@ maryland-soybean-stress/
 
 Google Earth Engine **JavaScript** sources currently live under `scripts/GEE_Scripts/` and `scripts/CreateNDVI/*.js`. In **Round 3**, canonical GEE JS sources will be moved to a top-level `GEE_Scripts/` folder, and duplicates under `scripts/` will be removed.
 
-## Data sources (summary)
+## Data sources
 
 | Source | Role in this project |
 |--------|----------------------|
-| **USDA NASS** | Soybean (and auxiliary corn) yield, acreage, district assignments; Census of Agriculture irrigation tables. |
-| **NOAA / NCEI** | County precipitation; Palmer **PDSI**, **PHDI**, **PMDI** monthly series. |
-| **USDA Cropland Data Layer (CDL)** | Soybean mask for GEE zonal stats; band-5 soil composition inputs (via preprocessed county tables). |
-| **Google Earth Engine (Sentinel-2; Landsat 8/9 pre-2017)** | Monthly / 10-day **NDVI** and **NDWI** composites for Maryland soybean pixels; exported county CSVs merged by `analysis/preprocessing/preprocess_10day_indices.py`. |
-| **U.S. Census TIGER/Line** | County boundaries (e.g. `cb_2018_us_county_500k`) for mapping scripts. |
-| **Maryland Geological Survey / soil tabular products** | County-level soil attributes as used in the soil composition preprocessing (see preprocessing docstrings). |
-| **Klopp & Bly (2024)** | Soil water-holding capacity reference values used in soil composition preprocessing. SDSU Extension. |
+| **USDA NASS** | County-level soybean yield, acreage, and Census of Agriculture irrigation tables. |
+| **NOAA NCEI** | County precipitation; Palmer PDSI, PHDI, and PMDI monthly series. |
+| **USDA Cropland Data Layer (CDL)** | Soybean field mask for GEE zonal statistics; soil composition inputs. |
+| **Sentinel-2 (via Google Earth Engine)** | Surface reflectance for 10-day NDVI and NDWI composites (2017–2024). |
+| **Landsat 8/9 (via Google Earth Engine)** | Surface reflectance for 10-day NDVI and NDWI composites (2008–2016). |
+| **U.S. Census TIGER/Line** | Maryland county boundaries for mapping scripts. |
+| **Maryland Geological Survey** | County-level soil attributes for soil composition preprocessing. |
+| **Klopp & Bly (2024)** | Soil water-holding capacity reference values. SDSU Extension. |
 
-Exact filenames and download steps are in **`data/README.md`**.
+Exact filenames, query parameters, and download steps are in
+[`data/README.md`](data/README.md).
 
-## Figures ↔ code (manifest)
+## Figures ↔ code
 
-The authoritative mapping is:
+The authoritative mapping lives in two places:
 
-1. **Orchestrator manifest** — list `FIGURE_MANIFEST` in  
-   `analysis/figures/regenerate_manuscript_figures.py`  
-   (each entry: `generator_module`, descriptive PNG path, `outputs/manuscript_figures/FigureNN.png`).
-
-2. **Baseline / hash record** —  
-   `docs/manuscript_figures_baseline.json`  
-   (`manuscript_baseline_sha256` vs `current_regeneration_sha256`).
-
-Run `python -m analysis.figures.regenerate_manuscript_figures --help` for flags (`--figure`, `--no-copy`, `--verify-only`, `--update-current-baseline`).
+1. The `FIGURE_MANIFEST` list in
+   `analysis/figures/regenerate_manuscript_figures.py`
+2. The hash record in `docs/manuscript_figures_baseline.json`
 
 ## License
 
-This repository is released under the **MIT License** — see [`LICENSE`](LICENSE).
-Round 2 will update `LICENSE` to use the full author list: **“Copyright (c) 2026 Ananth Sriram, Iolanda Borzi, Hemendra Kumar.”**
-
-## Known limitations & outstanding items
-
-- **Figure 2:** Canonical `Variant_*.png` identification still pending; orchestrator uses a labeled **placeholder** copy and prints warnings.
-- **Threshold literals:** NDWI stress-band constants (`0.121`–`0.144` family) appear in multiple modules; a reconciliation table is a carry-forward from Phase 3 (no silent scientific changes).
-- **Archived legacy paths:** Some figure wrappers load provenance code from `archive/figure_drafts/` (e.g. precipitation climatology, study-area yield facets); see `REORG_PHASE3_REPORT.md`.
-- **`scripts/` residual:** plotting helpers and GEE JS may still live under `scripts/` until Round 3 migration; not required for `python -m analysis.*` once migration completes.
-
-## Manuscript baselines
-
-The originally submitted manuscript figure baselines live under `outputs/manuscript_baselines/` and are used for hash comparisons and side-by-side review tiles.
-
-## Contact
-
-Corresponding / lead author: **Ananth Sriram** — update with institutional email and ORCID in `CITATION.cff` when you finalize Round 2.
+This repository is released under the MIT License — see
+[`LICENSE`](LICENSE).
