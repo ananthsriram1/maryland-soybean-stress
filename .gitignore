@@ -1,38 +1,101 @@
-# Virtual Environments
-venv/
-env/
-.venv/
+# =============================================================================
+# Phase 4 — Round 1 DRAFT (.gitignore)
+# Review this file before asking the assistant to commit it.
+# =============================================================================
 
-# Cache files
+# --- Python bytecode & packaging ---
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints
-
-# Build artifacts
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
+.installed.cfg
+*.egg
+/MANIFEST
 
+# --- Virtual environments & secrets ---
+venv/
+.venv/
+env/
+.env
+.env.*
+!.env.example
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# --- Test / coverage / type-check caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# --- OS & editors ---
 .DS_Store
 .AppleDouble
 .LSOverride
+Thumbs.db
+.idea/
+*.swp
+*.swo
+*~
+*.log
 
-# #### Visual Studio Code Template ####
+# VS Code: allow optional shared workspace snippets if you add them later
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# #### Project-Specific Additions ####
-
-# Ignore the data folder to keep large CSVs out of the repository.
-# This is the most important rule for your project!
+# --- Project: canonical inputs (large; not shipped in git) ---
+# Obtain per README / future data/README.md (add `!/data/README.md` when that file exists).
 /data/
+!/data/
+!/data/README.md
 
-# Ignore any local environment variable files
-.env
+# Large optional local caches (create only if your workflow uses them)
+data/output_cache/
+
+# --- Project: generated outputs under outputs/ ---
+# Policy: ignore everything under outputs/ except (a) the ten paper figures,
+# (b) the original manuscript baseline PNG bundle used for hash/compare, and
+# (c) explicitly NOT the side-by-side review tiles.
+#
+# Git requires un-ignoring parent directories before un-ignoring files inside them.
+outputs/*
+!outputs/manuscript_figures/
+outputs/manuscript_figures/*
+!outputs/manuscript_figures/Figure*.png
+
+# Original submitted-figure baselines (orchestrator + baseline JSON reference these paths)
+!outputs/manuscript_baselines/
+outputs/manuscript_baselines/*
+!outputs/manuscript_baselines/*.png
+
+# --- Repo root: manuscript / abstract working files ---
+# Drafts should live under archive/manuscript/ or archive/notes/; these rules
+# catch stragglers reintroduced at the repo root before a bad push.
+/*.docx
+/Manuscript_*.pdf
+/abstract
