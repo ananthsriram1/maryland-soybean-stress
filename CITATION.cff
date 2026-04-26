@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Maryland soybean stress: drought, irrigation, and vegetation indices"
+type: software
+authors:
+  - family-names: "Sriram"
+    given-names: "Ananth"
+  - family-names: "Borzì"
+    given-names: "Iolanda"
+  - family-names: "Kumar"
+    given-names: "Hemendra"
+license: "MIT"
+repository-code: "https://github.com/<REPLACE_WITH_GITHUB_OWNER>/<REPLACE_WITH_REPO_NAME>"
+doi: "10.5281/zenodo.xxxxxxx"
+keywords:
+  - soybean
+  - drought
+  - irrigation
+  - NDVI
+  - NDWI
+  - Maryland
+  - remote sensing
+  - agriculture
