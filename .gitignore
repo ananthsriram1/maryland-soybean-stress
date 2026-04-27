@@ -99,3 +99,6 @@ outputs/manuscript_baselines/*
 /*.docx
 /Manuscript_*.pdf
 /abstract
+
+# --- Local-only documentation (not shipped in git) ---
+/docs/
