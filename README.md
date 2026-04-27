@@ -59,18 +59,16 @@ regeneration.
 
 ```text
 maryland-soybean-stress/
-├── analysis/                 # All shipped Python (package import path: analysis.*)
-│   ├── preprocessing/      # Build / combine canonical CSVs from raw inputs
-│   ├── stress_analysis/    # Statistical engines (flash drought, differential stress, …)
-│   └── figures/            # Manuscript figure scripts + regenerate_manuscript_figures.py
-├── archive/                # Demoted / legacy scripts (not part of the figure path)
-├── docs/                   # Baseline JSON, reorg notes, Phase 4+ documentation
-├── scripts/                # Residual GEE JS + helpers (will be migrated/removed in Round 3)
-├── data/                   # Ignored: local inputs (NASS, Palmer, GEE exports, …)
-└── outputs/                # Mostly ignored; tracked exceptions under outputs/manuscript_figures/
+├── analysis/              # Python analysis pipeline (import path: analysis.*)
+│   ├── preprocessing/     # Build canonical CSVs from raw inputs
+│   ├── stress_analysis/   # Statistical engines (flash drought, differential stress)
+│   └── figures/           # Figure generators + regenerate_manuscript_figures.py
+├── archive/               # Legacy and exploratory scripts (not in figure pipeline)
+├── data/                  # Local inputs (gitignored; see data/README.md)
+├── docs/                  # Baseline JSON, manifest, supporting documentation
+├── outputs/               # Generated outputs (mostly gitignored)
+└── scripts/               # Google Earth Engine JavaScript sources
 ```
-
-Google Earth Engine **JavaScript** sources currently live under `scripts/GEE_Scripts/` and `scripts/CreateNDVI/*.js`. In **Round 3**, canonical GEE JS sources will be moved to a top-level `GEE_Scripts/` folder, and duplicates under `scripts/` will be removed.
 
 ## Data sources
 
